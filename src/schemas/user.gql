@@ -1,0 +1,14 @@
+type User {
+    _id: ID
+    name: String
+    email: String
+    phoneNumber: String
+}
+
+type Query {
+    sayHello: String
+}
+
+type Mutation {
+    sayBye: String
+}

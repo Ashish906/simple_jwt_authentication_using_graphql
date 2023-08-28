@@ -1,0 +1,1 @@
+exports.authHelper = require('./auth/auth.helper')
