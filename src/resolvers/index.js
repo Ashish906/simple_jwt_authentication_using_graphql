@@ -1,7 +1,9 @@
-const userQuery = require('./user/user.query')
+import authQuery from './auth/auth.query.js'
+import userQuery from './user/user.query.js'
 
-module.exports = {
+export default {
     Query: {
+        ...authQuery,
         ...userQuery
     },
     Mutation: {}

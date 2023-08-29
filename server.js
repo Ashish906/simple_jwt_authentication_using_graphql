@@ -1,15 +1,15 @@
-const { ApolloServer } = require('@apollo/server')
-const { expressMiddleware } = require('@apollo/server/express4')
-const { json } = require('body-parser')
-const cors = require('cors')
-const dotenv = require('dotenv')
-const express = require('express')
-const http = require('http')
+import { ApolloServer } from '@apollo/server'
+import { expressMiddleware } from '@apollo/server/express4'
+import cors from 'cors'
+import dotenv from 'dotenv'
+import express from 'express'
+import http from 'http'
 
-const { AsyncHandler } = require('./utils')
-const typeDefs = require('./src/schemas')
-const resolvers = require('./src/resolvers')
-const { authHelper } = require('./src/resolvers/helpers')
+import { AsyncHandler } from './src/resolvers/utils/index.js'
+import typeDefs from './src/schemas/index.js'
+import resolvers from './src/resolvers/index.js'
+import { authHelper } from './src/resolvers/helpers.js'
+import connectDb from './config/db.js'
 
 // To use environment veriables
 dotenv.config({
@@ -20,9 +20,9 @@ const app = express()
 // Our httpServer handles incoming requests to our Express app.
 // Below, we tell Apollo Server to "drain" this httpServer,
 // enabling our servers to shut down gracefully.
-const httpServer = http.createServer(app);
+const httpServer = http.createServer(app)
 
-const startServer = AsyncHandler(async () => {
+const startServer = AsyncHandler.default(async () => {
     const server = new ApolloServer({
         typeDefs,
         resolvers,
@@ -32,11 +32,14 @@ const startServer = AsyncHandler(async () => {
     // instance before passing the instance to `expressMiddleware`
     await server.start()
 
+    // Connect db
+    connectDb(process.env.MONGO_URL)
+
     // Specify the path where we'd like to mount our server
     app.use(
         '/api/v1',
         cors(),
-        json(),
+        express.json(),
         // expressMiddleware accepts the same arguments:
         // an Apollo Server instance and optional configuration options
         expressMiddleware(server, {

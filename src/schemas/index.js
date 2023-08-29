@@ -1,8 +1,9 @@
-const fs = require('fs')
-const path = require('path')
+import fs from 'fs'
 
-const userSchema = fs.readFileSync(path.resolve(__dirname, 'user.gql')).toString()
+const authSchema = fs.readFileSync('src/schemas/auth.gql').toString()
+const userSchema = fs.readFileSync('src/schemas/user.gql').toString()
 
-module.exports = `
+export default `
+    ${authSchema}
     ${userSchema}
 `
